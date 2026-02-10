@@ -1,4 +1,5 @@
 {
-    "htmlPattern": "h3",
-    "url": "example.com"
+    "tag": "h3",
+    "tagClass": "container",
+    "url": "http://localhost:8080"
 }
