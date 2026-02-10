@@ -3,6 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from contextlib import ExitStack
 import requests
+from bs4 import BeautifulSoup
 
 def print_art():
     print("                           ♦                ")
@@ -41,7 +42,7 @@ def load_config():
         return json.load(f)
 
 def fetch_HTML(requestURL):
-    r = requests.get(requestURL)
+    r = requests.get(requestURL, headers={'User-Agent': 'Mozilla/5.0'})
     if r.status_code == 200:
         print("Succesfully retrieved HTML data")
         return r.text
@@ -49,13 +50,24 @@ def fetch_HTML(requestURL):
         print("An Error ocurred fetching the data")
         return ""
 
+def extract_info(rawHTML, tag, tag_class):
+    soup = BeautifulSoup(rawHTML, 'html.parser')
+    soup.find_all('span', class_='flex text-xs')
+    print(":p")
 
 def main():
     print_art()
     try:
         config = load_config()
         print("Extrayendo informacion de HTML...")
-        fetch_HTML(config['url'])
+        raw_html = fetch_HTML(config['url'])
+        if raw_html == "":
+            print(f'No se pudo extraer información de la URL {config['url']}')
+            print(":p")
+            exit()
+        else: 
+            extract_info(raw_html, config['tag'],config['tagClass'])
+        
     except FileNotFoundError:
         print("\n  [!] Error: No se encontró el archivo 'config.json'.")
     except Exception as e:
