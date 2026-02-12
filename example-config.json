@@ -1,5 +1,10 @@
 {
     "tag": "h3",
     "tagClass": "container",
-    "url": "http://localhost:8080"
+    "url": "http://localhost:8080",
+    "headers": {
+        "Accept": "*/*",
+        "User-Agent": "Mozilla/5.0",
+        "Authorization": "tokenOrSomething"
+    }
 }

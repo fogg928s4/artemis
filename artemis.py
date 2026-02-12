@@ -41,8 +41,9 @@ def load_config():
     with open(config_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-def fetch_HTML(requestURL):
-    r = requests.get(requestURL, headers={'User-Agent': 'Mozilla/5.0'})
+# Reads information from url
+def fetch_HTML(request_URL, header_list):
+    r = requests.get(request_URL, headers=header_list)
     if r.status_code == 200:
         print("Succesfully retrieved HTML data")
         return r.text
@@ -52,21 +53,26 @@ def fetch_HTML(requestURL):
 
 def extract_info(rawHTML, tag, tag_class):
     soup = BeautifulSoup(rawHTML, 'html.parser')
-    soup.find_all('span', class_='flex text-xs')
+    return soup.find_all(tag, class_=tag_class)
     print(":p")
+
+def show_output(info):
+    for i in info:
+        print(i.get_text(strip=True))
 
 def main():
     print_art()
     try:
         config = load_config()
         print("Extrayendo informacion de HTML...")
-        raw_html = fetch_HTML(config['url'])
+        raw_html = fetch_HTML(config['url'], header_list=config['headers'])
         if raw_html == "":
             print(f'No se pudo extraer información de la URL {config['url']}')
             print(":p")
             exit()
         else: 
-            extract_info(raw_html, config['tag'],config['tagClass'])
+            info = extract_info(raw_html, config['tag'],config['tagClass'])
+            show_output(info)
         
     except FileNotFoundError:
         print("\n  [!] Error: No se encontró el archivo 'config.json'.")
